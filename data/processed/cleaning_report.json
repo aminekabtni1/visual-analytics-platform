@@ -1,0 +1,25 @@
+{
+  "counts": {
+    "raw_rows": 44931,
+    "dupes_removed": 120,
+    "cancelled_removed": 1065,
+    "null_customer_removed": 1573,
+    "junk_stockcode_removed": 0,
+    "bad_qty_price_removed": 0,
+    "bad_dates_removed": 0,
+    "deduped_pairs": 0,
+    "clean_rows": 42173,
+    "n_customers": 799,
+    "n_products": 47,
+    "n_transactions": 11287,
+    "date_min": "2010-12-01 09:14:00",
+    "date_max": "2011-11-30 17:59:00"
+  },
+  "cleaning_decisions": [
+    "Removed 120 exact duplicate rows (identical InvoiceNo+StockCode+Quantity+price).",
+    "Removed 1065 rows with cancelled InvoiceNo (prefix 'C'). Cancelled orders are excluded from mining to avoid negative quantities distorting basket analysis; they could be analysed separately for return-pattern mining.",
+    "Removed 1573 rows with null/empty CustomerID (1573 nulls). These rows cannot be attributed to a customer for RFM/clustering; they are excluded. Alternative would be to assign an 'UNKNOWN' customer, but that would pollute cluster statistics.",
+    "Removed 0 rows with non-product StockCodes (AMAZON/POST/DOT etc.) \u2014 these are postage/adjustment line items, not real products, and would inflate frequent itemsets with a ubiquitous 'POST' item.",
+    "Removed 0 rows with Quantity<=0 or UnitPrice<=0 (after canc. removal these are data errors)."
+  ]
+}

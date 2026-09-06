@@ -1,0 +1,92 @@
+erDiagram
+    customers ||--o{ transactions : places
+    transactions ||--o{ transaction_items : contains
+    products ||--o{ transaction_items : "appears in"
+
+    mining_runs ||--o{ frequent_itemsets : "produces"
+    mining_runs ||--o{ association_rules : "produces"
+    mining_runs ||--o{ customer_clusters : "produces"
+    mining_runs ||--o{ cluster_assignments : "produces"
+    mining_runs ||--o{ outliers : "produces"
+    customers ||--o{ cluster_assignments : "assigned to"
+    transactions ||--o{ outliers : "flagged as"
+
+    customers {
+        TEXT customer_id PK
+        TEXT country
+        TEXT first_seen
+        TEXT last_seen
+    }
+    products {
+        TEXT product_id PK
+        TEXT description
+        TEXT category
+        REAL unit_price
+    }
+    transactions {
+        TEXT transaction_id PK
+        TEXT customer_id FK
+        TEXT invoice_date
+        TEXT country
+    }
+    transaction_items {
+        INTEGER id PK
+        TEXT transaction_id FK
+        TEXT product_id FK
+        INTEGER quantity
+        REAL unit_price
+        REAL line_total
+    }
+    mining_runs {
+        TEXT run_id PK
+        TEXT run_type
+        TEXT created_at
+        TEXT params_json
+        TEXT notes
+    }
+    frequent_itemsets {
+        INTEGER id PK
+        TEXT run_id FK
+        TEXT itemset
+        INTEGER itemset_size
+        REAL support
+    }
+    association_rules {
+        INTEGER id PK
+        TEXT run_id FK
+        TEXT antecedent
+        TEXT consequent
+        REAL support
+        REAL confidence
+        REAL lift
+        REAL leverage
+        REAL conviction
+    }
+    customer_clusters {
+        INTEGER id PK
+        TEXT run_id FK
+        INTEGER cluster_label
+        INTEGER size
+        REAL avg_recency
+        REAL avg_frequency
+        REAL avg_monetary
+        TEXT centroid_json
+    }
+    cluster_assignments {
+        INTEGER id PK
+        TEXT run_id FK
+        TEXT customer_id FK
+        INTEGER cluster_label
+        REAL distance_to_centroid
+        REAL rfm_r
+        REAL rfm_f
+        REAL rfm_m
+    }
+    outliers {
+        INTEGER id PK
+        TEXT run_id FK
+        TEXT transaction_id FK
+        REAL anomaly_score
+        INTEGER is_outlier
+        TEXT reason_json
+    }

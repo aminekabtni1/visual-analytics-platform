@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+data/raw/*.csv
+data/raw/*.xlsx
+data/*.db
+!.streamlit/config.toml
+.DS_Store
