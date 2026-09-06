@@ -114,20 +114,6 @@ See the **Method & Evaluation** tab in the app for interactive versions of the s
 
 ---
 
-## Visual Design Plan (as implemented)
-
-The dashboard is intentionally **not** a default Streamlit/Bootstrap template.
-
-- **Identity:** “Field Notes / Archive” — an internal analytics tool a data team would actually use (references: Observable, Hex, well-crafted BI). Warm paper `#FDFCF9`, ink `#121417`, card white `#FFFFFF`, line `#E8E2D9`. Accent **terracotta `#C85A3A`** (primary action, high lift), **sage `#1E6B5A`** (secondary), **amber `#C18F2E`**, **blue `#3A5A7A`**. Dark sidebar `#0F1115` for navigation. No default Streamlit blue, no gradient hero, no centered 3-card marketing layout.
-- **Typography:** *Newsreader* (serif, headers, metric values), *Inter* (UI/body 13px), *JetBrains Mono* (labels, codes, table headers 10px uppercase). Clear hierarchy; no emoji-as-icons.
-- **Layout:** Narrow dark sidebar (radio nav styled as active pills) + wide main. Data-dense: `block-container` tight padding, bento cards (`border 1px solid #E8E2D9`, radius 12px, subtle shadow), custom metric cards with left accent bar instead of `st.metric`.
-- **Data visualization:** Plotly with custom palette (no rainbow defaults), thoughtful encoding (edge thickness→confidence, opacity→lift; PCA scatter with diamond centroids), clear legends, readable 10–11px ticks, `data-ink` maximised (Tufte), `hovermode="x unified"` for time series. Network graph via NetworkX spring layout (seeded).
-- **Interactivity:** Cross-linked — `st.session_state.selected_product` / `selected_cluster` ties Rules ↔ Clusters ↔ Overview; Isolation Forest drill-down shows `reason_json` z-scores.
-- **Information density > decoration:** no KPI-card spam, no illustrations, no stock imagery. Every number earns its place.
-
-The CSS is injected in `dashboard/app.py:CSS` (Inter/Newsreader/JetBrains Mono imports, `.card`, `.metric-value`, `.pill`, `.annotation`, sidebar overrides, table polish). Streamlit’s header/footer are hidden and the theme in `.streamlit/config.toml` matches the palette.
-
----
 
 ## Project Structure
 
