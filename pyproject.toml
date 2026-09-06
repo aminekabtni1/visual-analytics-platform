@@ -1,5 +1,5 @@
 [tool.vercel]
-entrypoint = "api/index.py"
+entrypoint = "api.index:app"
 
 [project]
 name = "visual-analytics-platform"
