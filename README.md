@@ -133,20 +133,26 @@ The CSS is injected in `dashboard/app.py:CSS` (Inter/Newsreader/JetBrains Mono i
 
 ```
 .
+├── api/index.py            # Vercel Python entrypoint (Flask landing page — makes vercel build pass)
+├── vercel.json             # → rewrites /(.*) to /api/index
+├── pyproject.toml          # tool.vercel.entrypoint = "api.index:app" + tool.setuptools.packages=["api"]
+├── .python-version         # 3.12 (Vercel + Streamlit Cloud)
+├── .streamlit/config.toml  # Custom theme (terracotta/sage/paper)
 ├── database/
 │   ├── schema.sql          # Raw + Mining DDL (SQLite/Postgres)
 │   └── db.py               # get_connection(), init_db()
 ├── data/
 │   ├── generate_synthetic.py  # Offline synthetic UCI-mirror dataset
 │   ├── load_data.py        # Cleaning pipeline -> normalized DB
-│   └── market_basket.db    # SQLite DB (generated)
+│   └── market_basket.db    # SQLite DB (generated, gitignored — auto-bootstrapped on Streamlit Cloud)
 ├── mining/
 │   ├── association.py      # FP-Growth -> mining_runs/frequent_itemsets/association_rules
 │   ├── clustering.py       # RFM + K-Means -> customer_clusters/cluster_assignments
 │   ├── outliers.py         # Isolation Forest -> outliers
 │   └── utils.py
 ├── dashboard/
-│   ├── app.py              # Streamlit visual analytics app (custom CSS)
+│   ├── app.py              # Streamlit visual analytics app (custom CSS, hides Streamlit chrome)
+│   ├── bootstrap.py        # Auto-regenerates DB + mining on fresh clone if missing
 │   └── data_loader.py      # DB query helpers
 ├── evals/
 │   ├── clustering_eval.json   # k vs silhouette + inertias
@@ -157,7 +163,7 @@ The CSS is injected in `dashboard/app.py:CSS` (Inter/Newsreader/JetBrains Mono i
 ├── assets/
 │   ├── er_diagram.png/.svg/.mmd
 │   └── screenshots/        # Generated from real DB
-├── requirements.txt
+├── requirements.txt        # Full deps (Streamlit/Docker)
 ├── Dockerfile
 ├── docker-compose.yml
 └── README.md
@@ -194,6 +200,18 @@ docker compose up --build
 ```
 
 The Docker image bakes data generation + all three mining runs at build time so the app is ready immediately.
+
+### Deploy
+
+**Streamlit Community Cloud (for the interactive dashboard):**
+- `share.streamlit.io` → New app → `aminekabtni1/visual-analytics-platform` → `dashboard/app.py`
+- The app auto-bootstraps on first run: if `data/market_basket.db` is missing (gitignored), `dashboard/bootstrap.py:1` regenerates synthetic data + runs all three mining pipelines, so no manual data setup is needed. Heavy deps are in `requirements.txt:1`.
+
+**Vercel (for this repo):**
+- Vercel is serverless and cannot run Streamlit’s long-running server. Pushes to `main` deploy a lightweight Flask landing at `api/index.py:1` (polished overview + screenshots + ER diagram + correct deploy instructions) that satisfies `vercel build`. The route is `vercel.json:1` → `/api/index` with `pyproject.toml:1` entrypoint `api.index:app` and `tool.setuptools.packages = ["api"]` to avoid flat-layout build errors. Use Vercel for the landing page only; use Streamlit Cloud / Render / Docker for the full dashboard.
+
+**Render / Railway / Fly.io (Docker alternate):**
+- Connect GitHub repo → autodetects `Dockerfile:1` (builds `requirements.txt` + bakes DB + mining runs, serves `8501`).
 
 ### Using the real UCI Online Retail dataset
 

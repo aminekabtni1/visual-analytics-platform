@@ -6,9 +6,11 @@ name = "visual-analytics-platform"
 version = "1.0.0"
 description = "Visual Analytics Platform for Market Basket & Customer Pattern Mining"
 requires-python = ">=3.11"
-dependencies = [
-  "flask>=3.0",
-]
+dependencies = ["flask>=3.0"]
 
 [build-system]
 requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["api"]

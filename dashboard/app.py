@@ -13,6 +13,8 @@ import networkx as nx
 import streamlit as st
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent.parent))
+from dashboard.bootstrap import bootstrap as _bootstrap
+_bootstrap()
 from dashboard.data_loader import (
     get_products, get_rules, get_frequent, get_clusters, get_outliers,
     get_raw_overview, get_product_history, get_cluster_product_affinity,

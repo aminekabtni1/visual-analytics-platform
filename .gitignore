@@ -8,3 +8,7 @@ data/raw/*.xlsx
 data/*.db
 !.streamlit/config.toml
 .DS_Store
+dist/
+build/
+*.egg-info/
+.streamlit/secrets.toml
